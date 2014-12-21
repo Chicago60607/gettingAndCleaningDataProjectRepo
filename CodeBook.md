@@ -1,79 +1,98 @@
+---
+title: "Getting and Cleaning Data - Code Book"
+author: "Alfonzo Vega"
+date: "Saturday, December 20, 2014"
+output: html_document
+---
+
 gettingAndCleaningDataProject
 
 =============================
 
 
-
-Getting and Cleaning Data - Project - Alfonzo Vega
-
-
-
-Prior to running the script, the source file from
+CodeBook
+The original files are extracted from
 
 https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
 is unzipped and its files and folders under "UCI HAR DataSet" are extracted to a folder
 "data" under the working directory
 
-The R Script run_analysis.R does the following steps
-01. Loads libraries dplyr (for summarize) and reshape2 (for melting the data to get the mean values)
+All original measures were extracted and then only the ones representing
+mean values or standard deviations were extracted
 
-02. Loads the activity labels file activity_lables.txt into a data frame and names the columns
+These measure values were renamed as per below.
+Finally for each measure of the ones listed, a mean value is 
+calculated per subject and activity.
 
-as "ActivityNumber" and "ActivityLabel", all files all loaded with space as separator
+Data was checked to make sure there were no invalid records:
+All subjects between 1 and 30
+All activities between 
 
-03. Every time a file is loaded a message is printed with the number of rows to check consistency
-
-04. Loads the features list file features.txt 
-and names the columns "FeatureNumber" and "FeatureLabel"
-
-05. Loads the training subject file subject_train.txt and names the column "subject"
-
-06. Loads the activity training file y_train.txt and names the column "Activity"
-
-07. Replaces the activity codes from the y_train activity training file 
-with Activity labels from step 02
-
-08. Loads the facts training file x_train.txt naming the colums with the labels 
-from the feature list in step 04
-using the switch "check.names=FALSE" to avoid 
-replacement of characters such as parenthesis, hyphen with dots
-
-09. Prints the number of columns of the loaded fact file
-
-10. Creates a data frame with one column, label "Type" value = "Training" 
-and same number of rows as the facts
-
-11. "CBIND"s the Type data frame from step 10, the training subject DF from step 05 
-and the facts from 08 in a single training data frame.
-
-12. Every time a new "big" data frame is created, 
-it removes the original one to free memory
-
-13. It prints the number of incomplete cases for observation 
-
-14. Repeats steps 05-13 for the test data set, subject file, activity file, merging
-
-15. Merges the training and test data frames in a single one with rbind
-
-16. Creates a new data frame with only mean and standard deviation measures: 
-it combines the first 3 columns of the originally merged data frame with a filter 
-of only the measures that contain mean() or std() via grep.
-
-17. Renames the columns using a function module with gsub based on the information 
-provided in the features_info.txt file:
-
--Replaces tBody with TimeBody, tGravity with TimeGravity, 
-fBody with FastFourierTransformBody, mean() with mean, std() with StandardDeviation, 
-Acc with Acceleration, Mag with Magnitud and -X, -Y, -Z with -Axis X, -Axis Y, -Axis Z.
-
-18. Melts the tidy data frame into a new one that has only 
-one measure column "value" and four characteristics: 
-Type (training or test), subject, Activity and variable that contains the 
-value of any of the 66 measures.
-
-19. Groups the melted data frame by subject, activity and variable
-
-20. Creates a tidy data frame with the mean values of each measure 
-using the summarize function
-
-21. Writes that tidy data frame to a file
+Original Measure  	  New Measure
+______________________________________________________________________
+tBodyAcc-mean()-X	TimeBodyAcceleration-mean-Axis X
+tBodyAcc-mean()-Y	TimeBodyAcceleration-mean-Axis Y
+tBodyAcc-mean()-Z	TimeBodyAcceleration-mean-Axis Z
+tBodyAcc-std()-X TimeBodyAcceleration-StandardDeviation-Axis X
+tBodyAcc-std()-Y TimeBodyAcceleration-StandardDeviation-Axis Y
+tBodyAcc-std()-Z TimeBodyAcceleration-StandardDeviation-Axis Z
+tGravityAcc-mean()-X TimeGravityAcceleration-mean-Axis X
+tGravityAcc-mean()-Y TimeGravityAcceleration-mean-Axis Y
+tGravityAcc-mean()-Z TimeGravityAcceleration-mean-Axis Z
+tGravityAcc-std()-X	TimeGravityAcceleration-StandardDeviation-Axis X
+tGravityAcc-std()-Y	TimeGravityAcceleration-StandardDeviation-Axis Y
+tGravityAcc-std()-Z	TimeGravityAcceleration-StandardDeviation-Axis Z
+tBodyAccJerk-mean()-X TimeBodyAccelerationJerk-mean-Axis X
+tBodyAccJerk-mean()-Y	TimeBodyAccelerationJerk-mean-Axis Y
+tBodyAccJerk-mean()-Z	TimeBodyAccelerationJerk-mean-Axis Z
+tBodyAccJerk-std()-X	TimeBodyAccelerationJerk-StandardDeviation-Axis X
+tBodyAccJerk-std()-Y TimeBodyAccelerationJerk-StandardDeviation-Axis Y
+tBodyAccJerk-std()-Z TimeBodyAccelerationJerk-StandardDeviation-Axis Z
+tBodyGyro-mean()-X TimeBodyGyro-mean-Axis X
+tBodyGyro-mean()-Y TimeBodyGyro-mean-Axis Y
+tBodyGyro-mean()-Z TimeBodyGyro-mean-Axis Z
+tBodyGyro-std()-X	TimeBodyGyro-StandardDeviation-Axis X
+tBodyGyro-std()-Y	TimeBodyGyro-StandardDeviation-Axis Y
+tBodyGyro-std()-Z TimeBodyGyro-StandardDeviation-Axis Z
+tBodyGyroJerk-mean()-X TimeBodyGyroJerk-mean-Axis X
+tBodyGyroJerk-mean()-Y TimeBodyGyroJerk-mean-Axis Y
+tBodyGyroJerk-mean()-Z TimeBodyGyroJerk-mean-Axis Z
+tBodyGyroJerk-std()-X	TimeBodyGyroJerk-StandardDeviation-Axis X
+tBodyGyroJerk-std()-Y TimeBodyGyroJerk-StandardDeviation-Axis Y
+tBodyGyroJerk-std()-Z TimeBodyGyroJerk-StandardDeviation-Axis Z
+tBodyAccMag-mean() TimeBodyAccelerationMagnitud-mean
+tBodyAccMag-std()	TimeBodyAccelerationMagnitud-StandardDeviation
+tGravityAccMag-mean() TimeGravityAccelerationMagnitud-mean
+tGravityAccMag-std() TimeGravityAccelerationMagnitud-StandardDeviation
+tBodyAccJerkMag-mean() TimeBodyAccelerationJerkMagnitud-mean
+tBodyAccJerkMag-std()	TimeBodyAccelerationJerkMagnitud-StandardDeviation
+tBodyGyroMag-mean()	TimeBodyGyroMagnitud-mean
+tBodyGyroMag-std() TimeBodyGyroMagnitud-StandardDeviation
+tBodyGyroJerkMag-mean()	TimeBodyGyroJerkMagnitud-mean
+tBodyGyroJerkMag-std() TimeBodyGyroJerkMagnitud-StandardDeviation
+fBodyAcc-mean()-X	FastFourierTransformBodyAcceleration-mean-Axis X
+fBodyAcc-mean()-Y	FastFourierTransformBodyAcceleration-mean-Axis Y
+fBodyAcc-mean()-Z	FastFourierTransformBodyAcceleration-mean-Axis Z
+fBodyAcc-std()-X FastFourierTransformBodyAcceleration-StandardDeviation-Axis X
+fBodyAcc-std()-Y FastFourierTransformBodyAcceleration-StandardDeviation-Axis Y
+fBodyAcc-std()-Z FastFourierTransformBodyAcceleration-StandardDeviation-Axis Z
+fBodyAccJerk-mean()-X FastFourierTransformBodyAccelerationJerk-mean-Axis X
+fBodyAccJerk-mean()-Y	FastFourierTransformBodyAccelerationJerk-mean-Axis Y
+fBodyAccJerk-mean()-Z FastFourierTransformBodyAccelerationJerk-mean-Axis Z
+fBodyAccJerk-std()-X FastFourierTransformBodyAccelerationJerk-StandardDeviation-Axis X
+fBodyAccJerk-std()-Y FastFourierTransformBodyAccelerationJerk-StandardDeviation-Axis Y
+fBodyAccJerk-std()-Z FastFourierTransformBodyAccelerationJerk-StandardDeviation-Axis Z
+fBodyGyro-mean()-X FastFourierTransformBodyGyro-mean-Axis X
+fBodyGyro-mean()-Y FastFourierTransformBodyGyro-mean-Axis Y
+fBodyGyro-mean()-Z FastFourierTransformBodyGyro-mean-Axis Z
+fBodyGyro-std()-X	FastFourierTransformBodyGyro-StandardDeviation-Axis X
+fBodyGyro-std()-Y	FastFourierTransformBodyGyro-StandardDeviation-Axis Y
+fBodyGyro-std()-Z	FastFourierTransformBodyGyro-StandardDeviation-Axis Z
+fBodyAccMag-mean() FastFourierTransformBodyAccelerationMagnitud-mean
+fBodyAccMag-std() FastFourierTransformBodyAccelerationMagnitud-StandardDeviation
+fBodyBodyAccJerkMag-mean() FastFourierTransformBodyBodyAccelerationJerkMagnitud-mean
+fBodyBodyAccJerkMag-std()	FastFourierTransformBodyBodyAccelerationJerkMagnitud-StandardDeviation 
+fBodyBodyGyroMag-mean()	FastFourierTransformBodyBodyGyroMagnitud-mean
+fBodyBodyGyroMag-std() FastFourierTransformBodyBodyGyroMagnitud-StandardDeviation
+fBodyBodyGyroJerkMag-mean()	FastFourierTransformBodyBodyGyroJerkMagnitud-mean
+fBodyBodyGyroJerkMag-std() FastFourierTransformBodyBodyGyroJerkMagnitud-StandardDeviation
